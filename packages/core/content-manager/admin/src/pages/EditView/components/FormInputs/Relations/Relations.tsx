@@ -750,9 +750,15 @@ const RelationModalWithContext = ({
 
   const options = data?.results ?? [];
 
+  /**
+   * Selecting an option makes the Combobox write the option label into its input, which fires
+   * `onInputChange` and sets the search query to that label. Once the selection changes we reset
+   * both the text and the search query, so reopening the dropdown lists the remaining entries.
+   */
   React.useLayoutEffect(() => {
     setTextValue('');
-  }, [fieldValue]);
+    setSearchParams((s) => (s._q === '' && s.page === 1 ? s : { ...s, _q: '', page: 1 }));
+  }, [fieldValue, setSearchParams]);
 
   const handleSearch = async (search: string) => {
     setSearchParams((s) => ({ ...s, _q: search, page: 1 }));
